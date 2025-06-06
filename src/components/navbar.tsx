@@ -20,6 +20,12 @@ export default function Navbar() {
             >
               Active Raffles
             </Link>
+            <Link
+              href="/dashboard"
+              className="text-gray-700 hover:text-green-600 transition-colors"
+            >
+              My Dashboard
+            </Link>
             <Link href="/start-raffle">
               <Button className="bg-green-600 hover:bg-green-700">
                 Start a Raffle

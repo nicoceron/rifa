@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -39,22 +39,6 @@ type RaffleFormData = z.infer<typeof raffleSchema>;
 export default function StartRaffle() {
   const { toast } = useToast();
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Check if user is authenticated (mock implementation)
-  useEffect(() => {
-    // This is a mock authentication check
-    // In a real app, you'd check for JWT token, session, etc.
-    const userToken = localStorage.getItem("userToken");
-
-    if (!userToken) {
-      // Redirect to signup page if not authenticated
-      router.push("/signup");
-      return;
-    }
-
-    setIsAuthenticated(true);
-  }, [router]);
 
   const form = useForm<RaffleFormData>({
     resolver: zodResolver(raffleSchema),
@@ -72,6 +56,15 @@ export default function StartRaffle() {
   });
 
   const onSubmit = (data: RaffleFormData) => {
+    // Check if user is authenticated before submitting
+    const userToken = localStorage.getItem("userToken");
+
+    if (!userToken) {
+      // Redirect to signin page if not authenticated
+      router.push("/signin");
+      return;
+    }
+
     console.log("Raffle submission:", data);
     toast("Raffle Created Successfully!", {
       description:
@@ -106,18 +99,6 @@ export default function StartRaffle() {
       description: "Educational support and scholarships",
     },
   ];
-
-  // Show loading while checking authentication
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking authentication...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
