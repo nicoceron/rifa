@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import Image from "next/image";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   const featuredRaffles = [
@@ -90,79 +91,14 @@ export default function Home() {
     },
   ];
 
-  const steps = [
-    {
-      step: 1,
-      title: "Scan QR Code",
-      description:
-        "Simply scan the QR code at the fundraising event or from promotional materials",
-      icon: QrCode,
-    },
-    {
-      step: 2,
-      title: "Choose Tickets",
-      description:
-        "Select how many raffle tickets you'd like to purchase to support the cause",
-      icon: DollarSign,
-    },
-    {
-      step: 3,
-      title: "Enter & Win",
-      description:
-        "Your entry is automatically recorded. Winners are drawn transparently and notified immediately",
-      icon: Shield,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <Heart className="h-8 w-8 text-green-600" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                RafflesForGood
-              </span>
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#how-it-works"
-                className="text-gray-700 hover:text-green-600 transition-colors"
-              >
-                How It Works
-              </a>
-              <a
-                href="#raffles"
-                className="text-gray-700 hover:text-green-600 transition-colors"
-              >
-                Active Raffles
-              </a>
-              <a
-                href="#categories"
-                className="text-gray-700 hover:text-green-600 transition-colors"
-              >
-                Categories
-              </a>
-              <Link href="/start-raffle">
-                <Button className="bg-green-600 hover:bg-green-700">
-                  Start a Raffle
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <Badge className="mb-6 bg-green-100 text-green-700 hover:bg-green-100">
-              <Shield className="w-4 h-4 mr-2" />
-              100% Transparent & Fair
-            </Badge>
             <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6">
               Raffles for
               <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent block">
@@ -191,6 +127,12 @@ export default function Home() {
                   Start Your Raffle
                 </Button>
               </Link>
+            </div>
+            <div className="flex justify-center mt-10">
+              <Badge className="mb-6 bg-green-100 text-green-700 hover:bg-green-100">
+                <Shield className="w-4 h-4 mr-2" />
+                100% Transparent & Fair
+              </Badge>
             </div>
           </div>
         </div>
@@ -314,46 +256,15 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-green-600 hover:bg-green-700">
-                      <QrCode className="w-4 h-4 mr-2" />
-                      Join Raffle
-                    </Button>
+                    <Link href={`/campaign/${raffle.id}`}>
+                      <Button className="w-full bg-green-600 hover:bg-green-700">
+                        <QrCode className="w-4 h-4 mr-2" />
+                        Join Raffle
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" className="py-20 bg-white/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-gray-600">
-              Simple, transparent, and effective fundraising in 3 easy steps
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step) => (
-              <div key={step.step} className="text-center">
-                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <step.icon className="h-10 w-10 text-green-600" />
-                </div>
-                <div className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">
-                  {step.step}
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
             ))}
           </div>
         </div>

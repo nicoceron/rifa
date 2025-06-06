@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Heart, ArrowLeft, Calendar, DollarSign } from "lucide-react";
+import { Calendar, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,8 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/navbar";
 
 const raffleSchema = z.object({
   title: z.string().min(10, "Title must be at least 10 characters"),
@@ -39,6 +39,22 @@ type RaffleFormData = z.infer<typeof raffleSchema>;
 export default function StartRaffle() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check if user is authenticated (mock implementation)
+  useEffect(() => {
+    // This is a mock authentication check
+    // In a real app, you'd check for JWT token, session, etc.
+    const userToken = localStorage.getItem("userToken");
+
+    if (!userToken) {
+      // Redirect to signup page if not authenticated
+      router.push("/signup");
+      return;
+    }
+
+    setIsAuthenticated(true);
+  }, [router]);
 
   const form = useForm<RaffleFormData>({
     resolver: zodResolver(raffleSchema),
@@ -91,30 +107,21 @@ export default function StartRaffle() {
     },
   ];
 
+  // Show loading while checking authentication
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <Heart className="h-8 w-8 text-green-600" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                RafflesForGood
-              </span>
-            </Link>
-            <Link href="/">
-              <Button
-                variant="outline"
-                className="border-green-300 hover:bg-green-50"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
