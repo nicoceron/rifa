@@ -1,6 +1,6 @@
-# RafflesForGood - Next.js Version
+# RafflesForGood 
 
-A modern, transparent fundraising platform that allows users to create and participate in raffles for good causes. This is a Next.js recreation of the original Vite project.
+A modern, transparent fundraising platform that allows users to create and participate in raffles for good causes.
 
 ## Features
 
