@@ -8,7 +8,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
@@ -194,77 +194,114 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredRaffles.map((raffle) => (
-              <Card
+              <div
                 key={raffle.id}
-                className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm"
+                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 h-[520px] flex flex-col"
               >
-                <div className="relative">
+                {/* Image Section */}
+                <div className="relative h-48 overflow-hidden">
                   <Image
                     src={raffle.image}
                     alt={raffle.title}
                     width={400}
                     height={300}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-full object-cover"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+
+                  {/* Category Badge */}
                   <Badge
-                    className={`absolute top-4 left-4 ${
+                    className={`absolute top-3 left-3 font-medium ${
                       raffle.category === "Pets"
-                        ? "bg-blue-100 text-blue-700"
+                        ? "bg-blue-100 text-blue-700 border-blue-200"
                         : raffle.category === "Medical"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-orange-100 text-orange-700"
+                        ? "bg-red-100 text-red-700 border-red-200"
+                        : raffle.category === "Emergency"
+                        ? "bg-orange-100 text-orange-700 border-orange-200"
+                        : "bg-green-100 text-green-700 border-green-200"
                     }`}
                   >
                     {raffle.category}
                   </Badge>
-                  <Badge className="absolute top-4 right-4 bg-white/90 text-gray-700">
+
+                  {/* Time Left Badge */}
+                  <Badge className="absolute top-3 right-3 bg-white/95 text-gray-700 border-white/20">
                     <Clock className="w-3 h-3 mr-1" />
                     {raffle.timeLeft}
                   </Badge>
+
+                  {/* Verified Badge */}
+                  <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-white/95 px-2 py-1 rounded-full">
+                    <div className="h-2 w-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs font-medium text-gray-700">
+                      Verified
+                    </span>
+                  </div>
                 </div>
 
-                <CardHeader className="pb-3">
-                  <h3 className="text-xl font-bold text-gray-900 line-clamp-2">
-                    {raffle.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-2">
-                    {raffle.description}
-                  </p>
-                  <p className="text-sm text-gray-500">by {raffle.organizer}</p>
-                </CardHeader>
-
-                <CardContent className="pt-0">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Raised ${raffle.raised.toLocaleString()}</span>
-                        <span>Goal ${raffle.goal.toLocaleString()}</span>
-                      </div>
-                      <Progress
-                        value={(raffle.raised / raffle.goal) * 100}
-                        className="h-2"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center text-gray-600">
-                        <DollarSign className="w-4 h-4 mr-1" />
-                        <span>${raffle.pricePerTicket}/ticket</span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <span>{raffle.ticketsLeft} tickets left</span>
-                      </div>
-                    </div>
-
-                    <Link href={`/campaign/${raffle.id}`}>
-                      <Button className="w-full bg-green-600 hover:bg-green-700">
-                        <QrCode className="w-4 h-4 mr-2" />
-                        Join Raffle
-                      </Button>
-                    </Link>
+                {/* Content Section */}
+                <div className="p-6 flex-1 flex flex-col">
+                  {/* Title and Description */}
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                      {raffle.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-2">
+                      {raffle.description}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      by {raffle.organizer}
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
+
+                  {/* Progress Section */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-600">
+                        ${raffle.raised.toLocaleString()} raised
+                      </span>
+                      <span className="font-medium text-gray-900">
+                        {Math.round((raffle.raised / raffle.goal) * 100)}%
+                      </span>
+                    </div>
+                    <Progress
+                      value={(raffle.raised / raffle.goal) * 100}
+                      className="h-2 bg-gray-100"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>Goal: ${raffle.goal.toLocaleString()}</span>
+                      <span>{raffle.ticketsLeft} tickets left</span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Section */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <DollarSign className="w-4 h-4 mr-1" />
+                      <span className="font-medium">
+                        ${raffle.pricePerTicket}
+                      </span>
+                      <span className="text-gray-500 ml-1">per ticket</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <span>
+                        {Math.floor(raffle.raised / raffle.pricePerTicket)}{" "}
+                        participants
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Spacer to push button to bottom */}
+                  <div className="flex-1"></div>
+
+                  {/* Action Button */}
+                  <Link href={`/campaign/${raffle.id}`}>
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition-colors">
+                      Join Raffle
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>

@@ -18,13 +18,13 @@ export default function Navbar() {
               href="/raffles"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
-              Active Raffles
+              Raffles
             </Link>
             <Link
               href="/dashboard"
               className="text-gray-700 hover:text-green-600 transition-colors"
             >
-              My Dashboard
+              Dashboard
             </Link>
             <Link href="/start-raffle">
               <Button className="bg-green-600 hover:bg-green-700">
