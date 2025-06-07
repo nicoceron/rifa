@@ -319,7 +319,7 @@ export default function RaffleDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -352,30 +352,34 @@ export default function RaffleDashboard() {
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-2 ml-6">
               <Image
                 src={raffle.qrCode}
                 alt={`QR Code for ${raffle.title}`}
-                width={120}
-                height={120}
+                width={96}
+                height={96}
                 className="border rounded-lg"
               />
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleDownloadQR(raffle.qrCode, raffle.title)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownloadQR(raffle.qrCode, raffle.title);
+                  }}
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download QR
+                  <Download className="w-3 h-3" />
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => handleShareRaffle(raffle.id, raffle.title)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShareRaffle(raffle.id, raffle.title);
+                  }}
                 >
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
+                  <Share2 className="w-3 h-3" />
                 </Button>
               </div>
             </div>
@@ -400,103 +404,134 @@ export default function RaffleDashboard() {
           </div>
         </div>
 
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Participants</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {raffle.participants.length}
-                  </p>
-                </div>
-                <Users className="h-8 w-8 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Revenue</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    ${raffle.raised.toLocaleString()}
-                  </p>
-                </div>
-                <DollarSign className="h-8 w-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Tickets Sold</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {raffle.soldTickets}
-                  </p>
-                </div>
-                <Trophy className="h-8 w-8 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Avg. Tickets/User</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {(raffle.soldTickets / raffle.participants.length).toFixed(
-                      1
-                    )}
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-orange-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Users Joined Over Time Chart */}
+        {/* Statistics and Chart Combined */}
         <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg mb-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Participants Joined Over Time
+              Participants Analytics
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={raffle.chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 12 }}
-                    axisLine={false}
-                  />
-                  <YAxis tick={{ fontSize: 12 }} axisLine={false} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #e5e7eb",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="cumulative"
-                    stroke="#059669"
-                    fill="#d1fae5"
-                    strokeWidth={2}
-                    name="Total Participants"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Statistics on the left */}
+              <div className="lg:w-1/3">
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="border border-gray-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">
+                            Total Participants
+                          </p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {raffle.participants.length}
+                          </p>
+                        </div>
+                        <Users className="h-8 w-8 text-blue-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border border-gray-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Revenue</p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            ${raffle.raised.toLocaleString()}
+                          </p>
+                        </div>
+                        <DollarSign className="h-8 w-8 text-green-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border border-gray-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Tickets Sold</p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {raffle.soldTickets}
+                          </p>
+                        </div>
+                        <Trophy className="h-8 w-8 text-purple-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border border-gray-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">
+                            Avg. Tickets/User
+                          </p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {(
+                              raffle.soldTickets / raffle.participants.length
+                            ).toFixed(1)}
+                          </p>
+                        </div>
+                        <TrendingUp className="h-8 w-8 text-orange-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Chart on the right */}
+              <div className="lg:w-2/3">
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={raffle.chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis
+                        dataKey="date"
+                        tick={{ fontSize: 12 }}
+                        axisLine={false}
+                      />
+                      <YAxis tick={{ fontSize: 12 }} axisLine={false} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "white",
+                          border: "1px solid #e5e7eb",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Area
+                        type="basis"
+                        dataKey="cumulative"
+                        stroke="#059669"
+                        fill="url(#colorGradient)"
+                        strokeWidth={3}
+                        name="Total Participants"
+                      />
+                      <defs>
+                        <linearGradient
+                          id="colorGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#059669"
+                            stopOpacity={0.3}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#059669"
+                            stopOpacity={0.05}
+                          />
+                        </linearGradient>
+                      </defs>
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

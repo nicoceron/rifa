@@ -119,9 +119,9 @@ export default function RafflesDirectory() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Active
-            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent block">
-              Raffles Directory
+            Active{" "}
+            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent inline-block">
+              Raffles
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -166,39 +166,6 @@ export default function RafflesDirectory() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        </div>
-
-        {/* Stats Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
-              {allRaffles.length}
-            </div>
-            <div className="text-gray-600">Active Raffles</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              $
-              {allRaffles
-                .reduce((sum, raffle) => sum + raffle.raised, 0)
-                .toLocaleString()}
-            </div>
-            <div className="text-gray-600">Total Raised</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              {allRaffles
-                .reduce((sum, raffle) => sum + raffle.ticketsLeft, 0)
-                .toLocaleString()}
-            </div>
-            <div className="text-gray-600">Tickets Available</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">
-              {categories.length - 1}
-            </div>
-            <div className="text-gray-600">Categories</div>
           </div>
         </div>
 
