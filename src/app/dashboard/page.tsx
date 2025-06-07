@@ -3,13 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  QrCode,
   Users,
   DollarSign,
-  Eye,
   Share2,
   Download,
-  ExternalLink,
   Clock,
   Target,
   Trophy,
@@ -18,16 +15,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/navbar";
 import Link from "next/link";
@@ -331,12 +318,13 @@ export default function Dashboard() {
           {userRaffles.map((raffle) => (
             <Card
               key={raffle.id}
-              className="border-0 bg-white/80 backdrop-blur-sm shadow-lg"
+              className="border-0 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              onClick={() => router.push(`/raffle-dashboard/${raffle.id}`)}
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-2xl mb-2">
+                    <CardTitle className="text-2xl mb-2 hover:text-green-600 transition-colors">
                       {raffle.title}
                     </CardTitle>
                     <p className="text-gray-600 mb-4">{raffle.description}</p>
@@ -372,6 +360,20 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <Link href={`/raffle-dashboard/${raffle.id}`}>
+                        <Button
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Users className="w-4 h-4 mr-2" />
+                          View Dashboard
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
 
                   <div className="flex flex-col items-center gap-2 ml-6">
@@ -386,18 +388,20 @@ export default function Dashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() =>
-                          handleDownloadQR(raffle.qrCode, raffle.title)
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownloadQR(raffle.qrCode, raffle.title);
+                        }}
                       >
                         <Download className="w-3 h-3" />
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() =>
-                          handleShareRaffle(raffle.id, raffle.title)
-                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShareRaffle(raffle.id, raffle.title);
+                        }}
                       >
                         <Share2 className="w-3 h-3" />
                       </Button>
@@ -405,199 +409,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </CardHeader>
-
-              <CardContent>
-                <Tabs defaultValue="participants" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="participants">
-                      Participants ({raffle.participants.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="details">Details</TabsTrigger>
-                    <TabsTrigger value="actions">Actions</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="participants" className="mt-6">
-                    <div className="border rounded-lg overflow-hidden">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Participant</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Ticket Numbers</TableHead>
-                            <TableHead>Purchase Date</TableHead>
-                            <TableHead>Amount</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {raffle.participants.map((participant) => (
-                            <TableRow key={participant.id}>
-                              <TableCell className="font-medium">
-                                {participant.name}
-                                {raffle.winner?.email === participant.email && (
-                                  <Badge className="ml-2 bg-yellow-100 text-yellow-700">
-                                    <Trophy className="w-3 h-3 mr-1" />
-                                    Winner
-                                  </Badge>
-                                )}
-                              </TableCell>
-                              <TableCell className="text-gray-600">
-                                {participant.email}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-wrap gap-1">
-                                  {participant.tickets.map((ticket) => (
-                                    <Badge
-                                      key={ticket}
-                                      variant="outline"
-                                      className={`text-xs ${
-                                        raffle.winner?.ticketNumber === ticket
-                                          ? "bg-yellow-100 text-yellow-700 border-yellow-300"
-                                          : ""
-                                      }`}
-                                    >
-                                      #{ticket}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-gray-600">
-                                {new Date(
-                                  participant.purchaseDate
-                                ).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell className="font-medium">
-                                $
-                                {(
-                                  participant.tickets.length *
-                                  raffle.ticketPrice
-                                ).toLocaleString()}
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="details" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-2">
-                            Financial Overview
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">
-                                Ticket Price:
-                              </span>
-                              <span className="font-medium">
-                                ${raffle.ticketPrice}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">
-                                Tickets Sold:
-                              </span>
-                              <span className="font-medium">
-                                {raffle.soldTickets}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">
-                                Total Tickets:
-                              </span>
-                              <span className="font-medium">
-                                {raffle.totalTickets}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Revenue:</span>
-                              <span className="font-medium">
-                                ${raffle.raised.toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-2">
-                            Raffle Information
-                          </h4>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">End Date:</span>
-                              <span className="font-medium">
-                                {new Date(raffle.endDate).toLocaleDateString()}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Status:</span>
-                              <span className="font-medium">
-                                {raffle.status}
-                              </span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Category:</span>
-                              <span className="font-medium">
-                                {raffle.category}
-                              </span>
-                            </div>
-                            {raffle.winner && (
-                              <div className="flex justify-between">
-                                <span className="text-gray-600">Winner:</span>
-                                <span className="font-medium">
-                                  {raffle.winner.name}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="actions" className="mt-6">
-                    <div className="flex flex-wrap gap-4">
-                      <Link href={`/campaign/${raffle.id}`}>
-                        <Button variant="outline">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Public Page
-                        </Button>
-                      </Link>
-
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          handleShareRaffle(raffle.id, raffle.title)
-                        }
-                      >
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Share Raffle
-                      </Button>
-
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          handleDownloadQR(raffle.qrCode, raffle.title)
-                        }
-                      >
-                        <QrCode className="w-4 h-4 mr-2" />
-                        Download QR Code
-                      </Button>
-
-                      {raffle.status === "active" && (
-                        <Button variant="outline">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Edit Raffle
-                        </Button>
-                      )}
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
             </Card>
           ))}
         </div>

@@ -307,6 +307,43 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Categories */}
+      <section id="categories" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Browse by Category
+            </h2>
+            <p className="text-xl text-gray-600">
+              Find raffles supporting causes you care about
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {categories.map((category) => (
+              <Card
+                key={category.name}
+                className="hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-white/80 backdrop-blur-sm"
+              >
+                <CardContent className="p-6 text-center">
+                  <div
+                    className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mx-auto mb-4`}
+                  >
+                    <category.icon className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {category.count} active raffles
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
