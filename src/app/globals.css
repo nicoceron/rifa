@@ -64,15 +64,15 @@
 
     --sidebar: oklch(0.9554 0.0082 301.3541);
 
-    --font-sans: Geist, sans-serif;
+    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
 
     --font-serif: "Lora", Georgia, serif;
 
     --font-mono: "Fira Code", "Courier New", monospace;
 
-    --shadow-color: hsl(0 0% 0%);
+    --shadow-color: #272756;
 
-    --shadow-opacity: 0.06;
+    --shadow-opacity: 0.6;
 
     --shadow-blur: 5px;
 
@@ -86,26 +86,21 @@
 
     --spacing: 0.25rem;
 
-    --shadow-2xs: 1px 2px 5px 1px hsl(0 0% 0% / 0.03);
+    --shadow-2xs: 1px 2px 5px 1px #272756 / 0.1;
 
-    --shadow-xs: 1px 2px 5px 1px hsl(0 0% 0% / 0.03);
+    --shadow-xs: 1px 2px 5px 1px #272756 / 0.15;
 
-    --shadow-sm: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 1px 2px 0px hsl(0 0% 0% / 0.06);
+    --shadow-sm: 1px 2px 5px 1px #272756 / 0.2, 1px 1px 2px 0px #272756 / 0.1;
 
-    --shadow: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 1px 2px 0px hsl(0 0% 0% / 0.06);
+    --shadow: 1px 2px 5px 1px #272756 / 0.2, 1px 1px 2px 0px #272756 / 0.1;
 
-    --shadow-md: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 2px 4px 0px hsl(0 0% 0% / 0.06);
+    --shadow-md: 1px 2px 5px 1px #272756 / 0.25, 1px 2px 4px 0px #272756 / 0.15;
 
-    --shadow-lg: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 4px 6px 0px hsl(0 0% 0% / 0.06);
+    --shadow-lg: 1px 2px 5px 1px #272756 / 0.3, 1px 4px 6px 0px #272756 / 0.2;
 
-    --shadow-xl: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 8px 10px 0px hsl(0 0% 0% / 0.06);
+    --shadow-xl: 1px 2px 5px 1px #272756 / 0.35, 1px 8px 10px 0px #272756 / 0.25;
 
-    --shadow-2xl: 1px 2px 5px 1px hsl(0 0% 0% / 0.15);
+    --shadow-2xl: 1px 2px 5px 1px #272756 / 0.4;
 
     --tracking-normal: 0em;
   }
@@ -153,33 +148,28 @@
     --chart-5: oklch(0.7857 0.0645 258.0839);
     --radius: 0.5rem;
     --sidebar: oklch(0.1985 0.02 293.6639);
-    --font-sans: Geist, sans-serif;
+    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
     --font-serif: "Lora", Georgia, serif;
     --font-mono: "Fira Code", "Courier New", monospace;
-    --shadow-color: hsl(0 0% 0%);
-    --shadow-opacity: 0.06;
+    --shadow-color: #272756;
+    --shadow-opacity: 0.6;
     --shadow-blur: 5px;
     --shadow-spread: 1px;
     --shadow-offset-x: 1px;
     --shadow-offset-y: 2px;
     --letter-spacing: 0em;
     --spacing: 0.25rem;
-    --shadow-2xs: 1px 2px 5px 1px hsl(0 0% 0% / 0.03);
-    --shadow-xs: 1px 2px 5px 1px hsl(0 0% 0% / 0.03);
-    --shadow-sm: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 1px 2px 0px hsl(0 0% 0% / 0.06);
-    --shadow: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 1px 2px 0px hsl(0 0% 0% / 0.06);
-    --shadow-md: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 2px 4px 0px hsl(0 0% 0% / 0.06);
-    --shadow-lg: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 4px 6px 0px hsl(0 0% 0% / 0.06);
-    --shadow-xl: 1px 2px 5px 1px hsl(0 0% 0% / 0.06),
-      1px 8px 10px 0px hsl(0 0% 0% / 0.06);
-    --shadow-2xl: 1px 2px 5px 1px hsl(0 0% 0% / 0.15);
+    --shadow-2xs: 1px 2px 5px 1px #272756 / 0.1;
+    --shadow-xs: 1px 2px 5px 1px #272756 / 0.15;
+    --shadow-sm: 1px 2px 5px 1px #272756 / 0.2, 1px 1px 2px 0px #272756 / 0.1;
+    --shadow: 1px 2px 5px 1px #272756 / 0.2, 1px 1px 2px 0px #272756 / 0.1;
+    --shadow-md: 1px 2px 5px 1px #272756 / 0.25, 1px 2px 4px 0px #272756 / 0.15;
+    --shadow-lg: 1px 2px 5px 1px #272756 / 0.3, 1px 4px 6px 0px #272756 / 0.2;
+    --shadow-xl: 1px 2px 5px 1px #272756 / 0.35, 1px 8px 10px 0px #272756 / 0.25;
+    --shadow-2xl: 1px 2px 5px 1px #272756 / 0.4;
   }
   .theme {
-    --font-sans: Geist, sans-serif;
+    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "Fira Code", "Courier New", monospace;
     --font-serif: "Lora", Georgia, serif;
     --radius: 0.5rem;

@@ -92,20 +92,20 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-6">
+            <h1 className="text-5xl lg:text-7xl font-bold text-custom-text mb-6">
               Raffles for
-              <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent block">
+              <span className="bg-gradient-to-r from-custom-button to-custom-bg bg-clip-text text-transparent block">
                 Good Causes
               </span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-custom-text mb-8 max-w-3xl mx-auto leading-relaxed">
               Create transparent, fair raffles for fundraising. Help pets get
               medical treatment, support families in need, or raise money for
               any cause. No apps required - just scan and join.
@@ -113,7 +113,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 size="lg"
-                className="bg-green-600 hover:bg-green-700 text-lg px-8 py-4"
+                className="bg-custom-button hover:bg-custom-button/90 text-custom-text text-lg px-8 py-4 shadow-custom"
               >
                 <QrCode className="w-5 h-5 mr-2" />
                 Scan to Join Raffle
@@ -122,14 +122,14 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="text-lg px-8 py-4 border-green-300 hover:bg-green-50"
+                  className="text-lg px-8 py-4 border-custom-text text-custom-text hover:bg-custom-bg/50 shadow-custom"
                 >
                   Start Your Raffle
                 </Button>
               </Link>
             </div>
             <div className="flex justify-center mt-10">
-              <Badge className="mb-6 bg-green-100 text-green-700 hover:bg-green-100">
+              <Badge className="mb-6 bg-custom-bg text-custom-text hover:bg-custom-bg/90">
                 <Shield className="w-4 h-4 mr-2" />
                 100% Transparent & Fair
               </Badge>
@@ -139,40 +139,40 @@ export default function Home() {
       </section>
 
       {/* Trust Indicators */}
-      <section className="py-12 bg-white/50">
+      <section className="py-12 bg-custom-bg/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="bg-green-100 p-3 rounded-full mb-4">
-                <Shield className="h-8 w-8 text-green-600" />
+              <div className="bg-custom-button/20 p-3 rounded-full mb-4">
+                <Shield className="h-8 w-8 text-custom-text" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-custom-text mb-2">
                 100% Transparent
               </h3>
-              <p className="text-gray-600">
+              <p className="text-custom-text/80">
                 Every draw is recorded and verifiable. See exactly where your
                 money goes.
               </p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="bg-blue-100 p-3 rounded-full mb-4">
-                <Users className="h-8 w-8 text-blue-600" />
+              <div className="bg-custom-button/20 p-3 rounded-full mb-4">
+                <Users className="h-8 w-8 text-custom-text" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-custom-text mb-2">
                 Community Driven
               </h3>
-              <p className="text-gray-600">
+              <p className="text-custom-text/80">
                 Real people helping real causes in their communities.
               </p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="bg-purple-100 p-3 rounded-full mb-4">
-                <QrCode className="h-8 w-8 text-purple-600" />
+              <div className="bg-custom-button/20 p-3 rounded-full mb-4">
+                <QrCode className="h-8 w-8 text-custom-text" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-custom-text mb-2">
                 No App Required
               </h3>
-              <p className="text-gray-600">
+              <p className="text-custom-text/80">
                 Simple QR code scanning. Works on any smartphone instantly.
               </p>
             </div>
@@ -181,13 +181,13 @@ export default function Home() {
       </section>
 
       {/* Featured Raffles */}
-      <section id="raffles" className="py-20">
+      <section id="raffles" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-custom-text mb-4">
               Active Raffles
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-custom-text/80">
               Join these ongoing raffles and make a difference today
             </p>
           </div>
@@ -196,7 +196,7 @@ export default function Home() {
             {featuredRaffles.map((raffle) => (
               <div
                 key={raffle.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 h-[520px] flex flex-col"
+                className="bg-white rounded-xl shadow-custom border border-custom-bg/30 overflow-hidden hover:shadow-custom-lg transition-all duration-300 transform hover:-translate-y-1 h-[520px] flex flex-col"
               >
                 {/* Image Section */}
                 <div className="relative h-48 overflow-hidden">
@@ -210,30 +210,20 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
                   {/* Category Badge */}
-                  <Badge
-                    className={`absolute top-3 left-3 font-medium ${
-                      raffle.category === "Pets"
-                        ? "bg-blue-100 text-blue-700 border-blue-200"
-                        : raffle.category === "Medical"
-                        ? "bg-red-100 text-red-700 border-red-200"
-                        : raffle.category === "Emergency"
-                        ? "bg-orange-100 text-orange-700 border-orange-200"
-                        : "bg-green-100 text-green-700 border-green-200"
-                    }`}
-                  >
+                  <Badge className="absolute top-3 left-3 font-medium bg-custom-button/90 text-custom-text border-custom-button">
                     {raffle.category}
                   </Badge>
 
                   {/* Time Left Badge */}
-                  <Badge className="absolute top-3 right-3 bg-white/95 text-gray-700 border-white/20">
+                  <Badge className="absolute top-3 right-3 bg-white/95 text-custom-text border-white/20">
                     <Clock className="w-3 h-3 mr-1" />
                     {raffle.timeLeft}
                   </Badge>
 
                   {/* Verified Badge */}
                   <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-white/95 px-2 py-1 rounded-full">
-                    <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                    <span className="text-xs font-medium text-gray-700">
+                    <div className="h-2 w-2 bg-custom-button rounded-full"></div>
+                    <span className="text-xs font-medium text-custom-text">
                       Verified
                     </span>
                   </div>
@@ -243,13 +233,13 @@ export default function Home() {
                 <div className="p-6 flex-1 flex flex-col">
                   {/* Title and Description */}
                   <div className="mb-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                    <h3 className="text-lg font-bold text-custom-text mb-2 line-clamp-2">
                       {raffle.title}
                     </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2 mb-2">
+                    <p className="text-custom-text/70 text-sm line-clamp-2 mb-2">
                       {raffle.description}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-custom-text/60">
                       by {raffle.organizer}
                     </p>
                   </div>
@@ -257,18 +247,18 @@ export default function Home() {
                   {/* Progress Section */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">
+                      <span className="text-custom-text/70">
                         ${raffle.raised.toLocaleString()} raised
                       </span>
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-custom-text">
                         {Math.round((raffle.raised / raffle.goal) * 100)}%
                       </span>
                     </div>
                     <Progress
                       value={(raffle.raised / raffle.goal) * 100}
-                      className="h-2 bg-gray-100"
+                      className="h-2 bg-custom-bg/30"
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <div className="flex justify-between text-xs text-custom-text/60 mt-1">
                       <span>Goal: ${raffle.goal.toLocaleString()}</span>
                       <span>{raffle.ticketsLeft} tickets left</span>
                     </div>
@@ -276,14 +266,16 @@ export default function Home() {
 
                   {/* Bottom Section */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-custom-text/70">
                       <DollarSign className="w-4 h-4 mr-1" />
                       <span className="font-medium">
                         ${raffle.pricePerTicket}
                       </span>
-                      <span className="text-gray-500 ml-1">per ticket</span>
+                      <span className="text-custom-text/60 ml-1">
+                        per ticket
+                      </span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-custom-text/60">
                       <span>
                         {Math.floor(raffle.raised / raffle.pricePerTicket)}{" "}
                         participants
@@ -296,7 +288,7 @@ export default function Home() {
 
                   {/* Action Button */}
                   <Link href={`/campaign/${raffle.id}`}>
-                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 rounded-lg transition-colors">
+                    <Button className="w-full bg-custom-button hover:bg-custom-button/90 text-custom-text font-medium py-3 rounded-lg transition-colors shadow-custom">
                       Join Raffle
                     </Button>
                   </Link>
@@ -308,13 +300,13 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section id="categories" className="py-20">
+      <section id="categories" className="py-20 bg-custom-bg/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-custom-text mb-4">
               Browse by Category
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-custom-text/80">
               Find raffles supporting causes you care about
             </p>
           </div>
@@ -323,55 +315,16 @@ export default function Home() {
             {categories.map((category) => (
               <Card
                 key={category.name}
-                className="hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-white/80 backdrop-blur-sm"
+                className="hover:shadow-custom-lg transition-all duration-300 cursor-pointer border-0 bg-white/90 backdrop-blur-sm shadow-custom"
               >
                 <CardContent className="p-6 text-center">
-                  <div
-                    className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mx-auto mb-4`}
-                  >
-                    <category.icon className="h-8 w-8" />
+                  <div className="w-16 h-16 rounded-full bg-custom-button/20 flex items-center justify-center mx-auto mb-4">
+                    <category.icon className="h-8 w-8 text-custom-text" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-custom-text mb-2">
                     {category.name}
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    {category.count} active raffles
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section id="categories" className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Browse by Category
-            </h2>
-            <p className="text-xl text-gray-600">
-              Find raffles supporting causes you care about
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((category) => (
-              <Card
-                key={category.name}
-                className="hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-white/80 backdrop-blur-sm"
-              >
-                <CardContent className="p-6 text-center">
-                  <div
-                    className={`w-16 h-16 rounded-full ${category.color} flex items-center justify-center mx-auto mb-4`}
-                  >
-                    <category.icon className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-custom-text/70">
                     {category.count} active raffles
                   </p>
                 </CardContent>
@@ -382,19 +335,19 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 to-blue-600">
+      <section className="py-20 bg-gradient-to-r from-custom-text to-custom-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-4">
             Ready to Make a Difference?
           </h2>
-          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
             Start your own raffle today and connect with people who want to
             support your cause.
           </p>
           <Link href="/start-raffle">
             <Button
               size="lg"
-              className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4"
+              className="bg-custom-button text-custom-text hover:bg-custom-button/90 text-lg px-8 py-4 shadow-custom-lg"
             >
               Start Your Raffle
               <ArrowRight className="w-5 h-5 ml-2" />

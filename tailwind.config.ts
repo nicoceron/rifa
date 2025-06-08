@@ -18,15 +18,25 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Banana Grotesk", "ui-sans-serif", "system-ui", "sans-serif"],
+      },
       colors: {
+        // Custom color palette
+        "custom-text": "#272756",
+        "custom-button": "#cdf378",
+        "custom-shadow": "#272756",
+        "custom-bg": "#bfbdff",
+
+        // Original shadcn/ui colors
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#cdf378", // Using custom button color as primary
+          foreground: "#272756", // Using custom text color
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -41,8 +51,8 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#bfbdff", // Using custom background color as accent
+          foreground: "#272756", // Using custom text color
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -67,6 +77,10 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        custom: `0 4px 6px -1px #272756, 0 2px 4px -1px #272756`,
+        "custom-lg": `0 10px 15px -3px #272756, 0 4px 6px -2px #272756`,
       },
       keyframes: {
         "accordion-down": {

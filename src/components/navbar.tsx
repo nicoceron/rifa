@@ -4,30 +4,30 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md border-b border-custom-bg/30 sticky top-0 z-50 shadow-custom">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-green-600" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            <Heart className="h-8 w-8 text-custom-button" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-custom-button to-custom-bg bg-clip-text text-transparent">
               RafflesForGood
             </span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/raffles"
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-custom-text hover:text-custom-button transition-colors font-medium"
             >
               Raffles
             </Link>
             <Link
               href="/dashboard"
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-custom-text hover:text-custom-button transition-colors font-medium"
             >
               Dashboard
             </Link>
             <Link href="/start-raffle">
-              <Button className="bg-green-600 hover:bg-green-700">
+              <Button className="bg-custom-button hover:bg-custom-button/90 text-custom-text shadow-custom">
                 Start a Raffle
               </Button>
             </Link>
