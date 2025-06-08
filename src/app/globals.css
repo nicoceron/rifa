@@ -64,7 +64,8 @@
 
     --sidebar: oklch(0.9554 0.0082 301.3541);
 
-    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-banana-grotesk), ui-sans-serif, system-ui,
+      sans-serif;
 
     --font-serif: "Lora", Georgia, serif;
 
@@ -148,7 +149,8 @@
     --chart-5: oklch(0.7857 0.0645 258.0839);
     --radius: 0.5rem;
     --sidebar: oklch(0.1985 0.02 293.6639);
-    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-banana-grotesk), ui-sans-serif, system-ui,
+      sans-serif;
     --font-serif: "Lora", Georgia, serif;
     --font-mono: "Fira Code", "Courier New", monospace;
     --shadow-color: #272756;
@@ -169,7 +171,8 @@
     --shadow-2xl: 1px 2px 5px 1px #272756 / 0.4;
   }
   .theme {
-    --font-sans: "Banana Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-banana-grotesk), ui-sans-serif, system-ui,
+      sans-serif;
     --font-mono: "Fira Code", "Courier New", monospace;
     --font-serif: "Lora", Georgia, serif;
     --radius: 0.5rem;

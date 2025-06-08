@@ -9,91 +9,100 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function SignIn() {
   const { toast } = useToast();
   const router = useRouter();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = () => {
-    // Mock Google signin - in real app this would integrate with Google OAuth
-    localStorage.setItem("userToken", "mock-google-jwt-token-12345");
-    localStorage.setItem("userEmail", "user@gmail.com");
-    localStorage.setItem("userFirstName", "John");
-    localStorage.setItem("userLastName", "Doe");
-
-    toast("Signed In Successfully!", {
-      description: "Welcome back! Redirecting to your dashboard.",
+    // TODO: Implement Google OAuth with Supabase
+    toast("Google Sign In Coming Soon!", {
+      description: "For now, please use email and password to sign in.",
     });
-
-    // Redirect to dashboard after successful signin
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 1500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     // Basic validation
     if (!email || !password) {
       toast("Please fill in all fields", {
         description: "Email and password are required to sign in.",
       });
+      setLoading(false);
       return;
     }
 
-    // Mock authentication - in real app this would call your auth API
-    localStorage.setItem("userToken", "mock-jwt-token-12345");
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userFirstName", "Demo");
-    localStorage.setItem("userLastName", "User");
+    try {
+      const { error } = await signIn(email, password);
 
-    toast("Signed In Successfully!", {
-      description: "Welcome back! Redirecting to your dashboard.",
-    });
+      if (error) {
+        toast("Sign In Failed", {
+          description: error.message,
+        });
+        setLoading(false);
+        return;
+      }
 
-    // Redirect to dashboard after successful signin
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 1500);
+      toast("Signed In Successfully!", {
+        description: "Welcome back! Redirecting to your dashboard.",
+      });
+
+      // Redirect to dashboard after successful signin
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      toast("Something went wrong", {
+        description: "Please try again later.",
+      });
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-4">
-            <Heart className="h-10 w-10 text-green-600" />
-            <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+            <Heart className="h-10 w-10 text-custom-button" />
+            <span className="text-3xl font-bold bg-gradient-to-r from-custom-button to-custom-bg bg-clip-text text-transparent">
               RafflesForGood
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-custom-text mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-600">
+          <p className="text-custom-text/70">
             Sign in to manage your raffles and track participants
           </p>
         </div>
 
         {/* Sign In Card */}
-        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-xl">
+        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-custom">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl text-center">Sign In</CardTitle>
+            <CardTitle className="text-xl text-center text-custom-text">
+              Sign In
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Google Sign In */}
             <Button
               type="button"
               variant="outline"
-              className="w-full py-6 text-base border-gray-300 hover:bg-gray-50"
+              className="w-full py-6 text-base border-custom-text/30 hover:bg-custom-bg/20 text-custom-text"
               onClick={handleGoogleSignIn}
             >
               <Image
@@ -109,10 +118,10 @@ export default function SignIn() {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-custom-text/20" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
+                <span className="px-2 bg-white text-custom-text/60">
                   Or continue with email
                 </span>
               </div>
@@ -121,20 +130,24 @@ export default function SignIn() {
             {/* Email/Password Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-custom-text">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12"
+                  className="h-12 border-custom-text/30 text-custom-text"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-custom-text">
+                  Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -142,7 +155,7 @@ export default function SignIn() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 pr-10"
+                    className="h-12 pr-10 border-custom-text/30 text-custom-text"
                     required
                   />
                   <Button
@@ -153,9 +166,9 @@ export default function SignIn() {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-custom-text/60" />
                     ) : (
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-custom-text/60" />
                     )}
                   </Button>
                 </div>
@@ -171,13 +184,16 @@ export default function SignIn() {
                       setRememberMe(checked as boolean)
                     }
                   />
-                  <Label htmlFor="remember" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="remember"
+                    className="text-sm text-custom-text/70"
+                  >
                     Remember me
                   </Label>
                 </div>
                 <Link
                   href="#"
-                  className="text-sm text-green-600 hover:text-green-500"
+                  className="text-sm text-custom-button hover:text-custom-button/80"
                 >
                   Forgot password?
                 </Link>
@@ -185,68 +201,48 @@ export default function SignIn() {
 
               <Button
                 type="submit"
-                className="w-full h-12 bg-green-600 hover:bg-green-700 text-base"
+                disabled={loading}
+                className="w-full h-12 bg-custom-button hover:bg-custom-button/90 text-custom-text text-base shadow-custom"
               >
-                Sign In
+                {loading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
 
             {/* Sign Up Link */}
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-custom-text/70">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-green-600 hover:text-green-500 font-medium"
+                  className="text-custom-button hover:text-custom-button/80 font-medium"
                 >
-                  Sign up here
+                  Sign up for free
                 </Link>
               </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Trust Indicators */}
-        <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-          <div className="flex flex-col items-center">
-            <div className="bg-green-100 p-2 rounded-full mb-2">
-              <Shield className="h-4 w-4 text-green-600" />
+        {/* Features */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-custom-text/60 mb-4">
+            Trusted by organizations worldwide
+          </p>
+          <div className="flex justify-center space-x-6 text-xs text-custom-text/50">
+            <div className="flex items-center space-x-1">
+              <Shield className="h-3 w-3" />
+              <span>Secure</span>
             </div>
-            <p className="text-xs text-gray-600">Bank-level security</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="bg-blue-100 p-2 rounded-full mb-2">
-              <CheckCircle className="h-4 w-4 text-blue-600" />
+            <div className="flex items-center space-x-1">
+              <CheckCircle className="h-3 w-3" />
+              <span>Transparent</span>
             </div>
-            <p className="text-xs text-gray-600">Verified campaigns</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="bg-purple-100 p-2 rounded-full mb-2">
-              <Heart className="h-4 w-4 text-purple-600" />
+            <div className="flex items-center space-x-1">
+              <Heart className="h-3 w-3" />
+              <span>For Good</span>
             </div>
-            <p className="text-xs text-gray-600">5-star support</p>
           </div>
         </div>
-
-        {/* Demo Credentials */}
-        <Card className="mt-6 border-amber-200 bg-amber-50/80 backdrop-blur-sm">
-          <CardContent className="p-4">
-            <h3 className="text-sm font-semibold text-amber-800 mb-2">
-              Demo Credentials
-            </h3>
-            <div className="space-y-1 text-xs text-amber-700">
-              <p>
-                <strong>Email:</strong> demo@example.com
-              </p>
-              <p>
-                <strong>Password:</strong> demo123
-              </p>
-              <p className="text-amber-600 mt-2">
-                Or use &quot;Continue with Google&quot; for instant access
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

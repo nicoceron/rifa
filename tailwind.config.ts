@@ -19,7 +19,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Banana Grotesk", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: [
+          "var(--font-banana-grotesk)",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
       },
       colors: {
         // Custom color palette

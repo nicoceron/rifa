@@ -10,11 +10,13 @@ import {
   Download,
   ExternalLink,
   Clock,
-  Trophy,
-  TrendingUp,
   Mail,
-  MapPin,
-  Phone,
+  ArrowLeft,
+  Calendar,
+  Target,
+  Ticket,
+  QrCode,
+  Gift,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,261 +35,169 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { useAuth } from "@/lib/auth-context";
+import { raffleOperations, ticketOperations } from "@/lib/database-helpers";
+import type { Database } from "@/lib/supabase";
 
-// Types
+type Raffle = Database["public"]["Tables"]["raffles"]["Row"] & {
+  prize_type?: "money" | "item";
+  prize_description?: string;
+};
+type Ticket = Database["public"]["Tables"]["tickets"]["Row"];
+
 interface Participant {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  phone: string;
   tickets: number[];
   purchaseDate: string;
   amount: number;
-  avatar: string;
 }
 
-// Mock data for a specific raffle
-const getRaffleData = (id: string) => {
-  const raffles = {
-    "1": {
-      id: 1,
-      title: "Help Luna Get Life-Saving Surgery",
-      description:
-        "Luna, a 3-year-old rescue dog, needs emergency surgery to remove a tumor. Every ticket helps save her life.",
-      organizer: "Rescue Hearts Foundation",
-      category: "Pets",
-      goal: 15000,
-      raised: 8500,
-      ticketPrice: 10,
-      endDate: "2024-12-30",
-      status: "active",
-      totalTickets: 1500,
-      soldTickets: 850,
-      location: "San Francisco, CA",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://rafflesforgood.com/raffle/1",
-      participants: [
-        {
-          id: 1,
-          name: "John Smith",
-          email: "john@example.com",
-          phone: "+1 (555) 123-4567",
-          tickets: [1, 45, 128],
-          purchaseDate: "2024-12-15T10:30:00Z",
-          amount: 30,
-          avatar:
-            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 2,
-          name: "Sarah Johnson",
-          email: "sarah@example.com",
-          phone: "+1 (555) 234-5678",
-          tickets: [2, 67, 234, 456],
-          purchaseDate: "2024-12-16T14:20:00Z",
-          amount: 40,
-          avatar:
-            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 3,
-          name: "Mike Davis",
-          email: "mike@example.com",
-          phone: "+1 (555) 345-6789",
-          tickets: [3, 89, 345],
-          purchaseDate: "2024-12-17T09:15:00Z",
-          amount: 30,
-          avatar:
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 4,
-          name: "Emma Wilson",
-          email: "emma@example.com",
-          phone: "+1 (555) 456-7890",
-          tickets: [4, 156, 278, 389, 567],
-          purchaseDate: "2024-12-18T16:45:00Z",
-          amount: 50,
-          avatar:
-            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 5,
-          name: "Chris Brown",
-          email: "chris@example.com",
-          phone: "+1 (555) 567-8901",
-          tickets: [5, 234, 567],
-          purchaseDate: "2024-12-19T11:30:00Z",
-          amount: 30,
-          avatar:
-            "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 6,
-          name: "Lisa Chen",
-          email: "lisa@example.com",
-          phone: "+1 (555) 678-9012",
-          tickets: [6, 123, 345, 678],
-          purchaseDate: "2024-12-20T13:20:00Z",
-          amount: 40,
-          avatar:
-            "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 7,
-          name: "David Kim",
-          email: "david@example.com",
-          phone: "+1 (555) 789-0123",
-          tickets: [7, 234, 456],
-          purchaseDate: "2024-12-21T08:45:00Z",
-          amount: 30,
-          avatar:
-            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 8,
-          name: "Anna Martinez",
-          email: "anna@example.com",
-          phone: "+1 (555) 890-1234",
-          tickets: [8, 345, 567, 789, 890],
-          purchaseDate: "2024-12-22T15:10:00Z",
-          amount: 50,
-          avatar:
-            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
-        },
-      ],
-      // Chart data for users joining over time
-      chartData: [
-        { date: "Dec 15", users: 1, cumulative: 1 },
-        { date: "Dec 16", users: 1, cumulative: 2 },
-        { date: "Dec 17", users: 1, cumulative: 3 },
-        { date: "Dec 18", users: 1, cumulative: 4 },
-        { date: "Dec 19", users: 1, cumulative: 5 },
-        { date: "Dec 20", users: 1, cumulative: 6 },
-        { date: "Dec 21", users: 1, cumulative: 7 },
-        { date: "Dec 22", users: 1, cumulative: 8 },
-      ],
-    },
-    "2": {
-      id: 2,
-      title: "School Supplies for Kids",
-      description:
-        "Help provide school supplies for underprivileged children in our community.",
-      organizer: "Education First Foundation",
-      category: "Education",
-      goal: 8000,
-      raised: 3200,
-      ticketPrice: 5,
-      endDate: "2024-12-28",
-      status: "active",
-      totalTickets: 1600,
-      soldTickets: 640,
-      location: "Austin, TX",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://rafflesforgood.com/raffle/2",
-      participants: [
-        {
-          id: 1,
-          name: "Robert Taylor",
-          email: "robert@example.com",
-          phone: "+1 (555) 987-6543",
-          tickets: [1, 23, 67],
-          purchaseDate: "2024-12-19T10:30:00Z",
-          amount: 15,
-          avatar:
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 2,
-          name: "Jessica Lee",
-          email: "jessica@example.com",
-          phone: "+1 (555) 876-5432",
-          tickets: [2, 45, 89, 123],
-          purchaseDate: "2024-12-20T14:20:00Z",
-          amount: 20,
-          avatar:
-            "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
-        },
-        {
-          id: 3,
-          name: "Tom Wilson",
-          email: "tom@example.com",
-          phone: "+1 (555) 765-4321",
-          tickets: [3, 78, 123],
-          purchaseDate: "2024-12-21T09:15:00Z",
-          amount: 15,
-          avatar:
-            "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
-        },
-      ],
-      chartData: [
-        { date: "Dec 19", users: 1, cumulative: 1 },
-        { date: "Dec 20", users: 1, cumulative: 2 },
-        { date: "Dec 21", users: 1, cumulative: 3 },
-      ],
-    },
-  };
-
-  return raffles[id as keyof typeof raffles] || raffles["1"];
-};
+interface RaffleWithStats extends Raffle {
+  participants: Participant[];
+  chartData: Array<{
+    date: string;
+    users: number;
+    cumulative: number;
+  }>;
+}
 
 export default function RaffleDashboard() {
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [raffle, setRaffle] = useState<ReturnType<typeof getRaffleData> | null>(
-    null
-  );
+  const { user, loading: authLoading } = useAuth();
+  const [raffle, setRaffle] = useState<RaffleWithStats | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Check authentication and load raffle data
+  const raffleId = params.id as string;
+
+  // Fetch raffle data and participants
   useEffect(() => {
-    const userToken = localStorage.getItem("userToken");
+    const fetchRaffleData = async () => {
+      if (!user || !raffleId) return;
 
-    if (!userToken) {
+      try {
+        console.log("Fetching raffle data for:", raffleId);
+
+        // Fetch raffle details
+        const raffleData = await raffleOperations.getRaffleById(raffleId);
+
+        // Check if user is the organizer
+        if (raffleData.organizer_id !== user.id) {
+          toast("Access Denied", {
+            description: "You can only manage raffles you created.",
+          });
+          router.push("/dashboard");
+          return;
+        }
+
+        // Fetch tickets for this raffle
+        const ticketsData = await ticketOperations.getTicketsByRaffle(raffleId);
+
+        // Group tickets by participant
+        const participantMap = new Map<string, Participant>();
+        ticketsData.forEach((ticket) => {
+          const key = ticket.participant_email;
+          if (!participantMap.has(key)) {
+            participantMap.set(key, {
+              id: ticket.participant_email,
+              name: ticket.participant_name,
+              email: ticket.participant_email,
+              tickets: [],
+              purchaseDate: ticket.created_at,
+              amount: 0,
+            });
+          }
+          const participant = participantMap.get(key)!;
+          participant.tickets.push(ticket.ticket_number);
+          participant.amount += raffleData.ticket_price;
+        });
+
+        const participants = Array.from(participantMap.values());
+
+        // Generate chart data - group tickets by date
+        const dateMap = new Map<string, number>();
+        ticketsData.forEach((ticket) => {
+          const date = new Date(ticket.created_at).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
+          dateMap.set(date, (dateMap.get(date) || 0) + 1);
+        });
+
+        // Create chart data with cumulative values
+        const sortedDates = Array.from(dateMap.entries()).sort(
+          (a, b) =>
+            new Date(a[0] + ", 2024").getTime() -
+            new Date(b[0] + ", 2024").getTime()
+        );
+
+        let cumulative = 0;
+        const chartData = sortedDates.map(([date, count]) => {
+          cumulative += count;
+          return {
+            date,
+            users: count,
+            cumulative,
+          };
+        });
+
+        const raffleWithStats: RaffleWithStats = {
+          ...raffleData,
+          participants,
+          chartData:
+            chartData.length > 0
+              ? chartData
+              : [{ date: "Today", users: 0, cumulative: 0 }],
+        };
+
+        setRaffle(raffleWithStats);
+      } catch (error) {
+        console.error("Error fetching raffle data:", error);
+        toast("Error Loading Data", {
+          description: "Could not load raffle data. Please try again.",
+        });
+        router.push("/dashboard");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!authLoading && user) {
+      fetchRaffleData();
+    } else if (!authLoading && !user) {
       router.push("/signin");
-      return;
     }
+  }, [user, authLoading, raffleId, router, toast]);
 
-    setIsAuthenticated(true);
-
-    // Load raffle data
-    const raffleData = getRaffleData(params.id as string);
-    setRaffle(raffleData);
-  }, [router, params.id]);
-
-  const handleShareRaffle = (raffleId: number, title: string) => {
-    const url = `${window.location.origin}/campaign/${raffleId}`;
+  const handleShareRaffle = () => {
+    if (!raffle) return;
+    const url = `${window.location.origin}/campaign/${raffle.id}`;
     navigator.clipboard.writeText(url);
     toast("Link Copied!", {
-      description: `Raffle link for "${title}" has been copied to clipboard.`,
+      description: `Raffle link has been copied to clipboard.`,
     });
   };
 
-  const handleDownloadQR = (qrCodeUrl: string, title: string) => {
+  const handleDownloadQR = () => {
+    if (!raffle) return;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
+      `${window.location.origin}/join/${raffle.id}`
+    )}`;
     const link = document.createElement("a");
     link.href = qrCodeUrl;
-    link.download = `qr-code-${title.replace(/\s+/g, "-").toLowerCase()}.png`;
+    link.download = `qr-code-${raffle.title
+      .replace(/\s+/g, "-")
+      .toLowerCase()}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     toast("QR Code Downloaded!", {
-      description: `QR code for "${title}" has been downloaded.`,
+      description: `QR code has been downloaded.`,
     });
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return <Badge className="bg-green-100 text-green-700">Active</Badge>;
-      case "completed":
-        return <Badge className="bg-blue-100 text-blue-700">Completed</Badge>;
-      case "ended":
-        return <Badge className="bg-gray-100 text-gray-700">Ended</Badge>;
-      default:
-        return <Badge className="bg-gray-100 text-gray-700">{status}</Badge>;
-    }
   };
 
   const getDaysLeft = (endDate: string) => {
@@ -300,339 +210,465 @@ export default function RaffleDashboard() {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
+      year: "numeric",
+      month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
   };
 
-  if (!isAuthenticated || !raffle) {
+  const getProgressPercentage = (raised: number, goal: number) => {
+    return Math.min((raised / goal) * 100, 100);
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: { [key: string]: string } = {
+      Medical: "bg-red-100 text-red-700",
+      Pets: "bg-blue-100 text-blue-700",
+      Emergency: "bg-orange-100 text-orange-700",
+      Education: "bg-green-100 text-green-700",
+    };
+    return colors[category] || "bg-gray-100 text-gray-700";
+  };
+
+  const getStatusColor = (status: string, endDate: string) => {
+    if (status === "completed") return "bg-green-100 text-green-700";
+    if (getDaysLeft(endDate) === 0) return "bg-red-100 text-red-700";
+    return "bg-blue-100 text-blue-700";
+  };
+
+  const getStatusText = (status: string, endDate: string) => {
+    if (status === "completed") return "Completed";
+    if (getDaysLeft(endDate) === 0) return "Ended";
+    return "Active";
+  };
+
+  if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading raffle dashboard...</p>
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="w-8 h-8 border-4 border-custom-button border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-custom-text">Loading raffle dashboard...</p>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  if (!user || !raffle) {
+    return null; // Will redirect
+  }
+
+  const progressPercentage = getProgressPercentage(
+    raffle.raised_amount,
+    raffle.goal_amount
+  );
+  const daysLeft = getDaysLeft(raffle.end_date);
+  const statusText = getStatusText(raffle.status, raffle.end_date);
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                {raffle.title}
-              </h1>
-              <p className="text-xl text-gray-600 mb-4">{raffle.description}</p>
-              <div className="flex items-center gap-4">
-                {getStatusBadge(raffle.status)}
-                <Badge className="bg-gray-100 text-gray-700">
-                  {raffle.category}
-                </Badge>
-                <Badge className="bg-blue-100 text-blue-700">
-                  <MapPin className="w-3 h-3 mr-1" />
-                  {raffle.location}
-                </Badge>
-                {raffle.status === "active" && (
-                  <Badge className="bg-orange-100 text-orange-700">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {getDaysLeft(raffle.endDate)} days left
-                  </Badge>
-                )}
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                by {raffle.organizer}
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center gap-2 ml-6">
-              <Image
-                src={raffle.qrCode}
-                alt={`QR Code for ${raffle.title}`}
-                width={96}
-                height={96}
-                className="border rounded-lg"
-              />
-              <div className="flex gap-1">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDownloadQR(raffle.qrCode, raffle.title);
-                  }}
-                >
-                  <Download className="w-3 h-3" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleShareRaffle(raffle.id, raffle.title);
-                  }}
-                >
-                  <Share2 className="w-3 h-3" />
-                </Button>
-              </div>
+          <div className="flex items-center gap-4 mb-4">
+            <Link href="/dashboard">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-custom-text/30 text-custom-text"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </Link>
+            <div className="flex gap-2">
+              <Badge className={getCategoryColor(raffle.category)}>
+                {raffle.category}
+              </Badge>
+              <Badge className={getStatusColor(raffle.status, raffle.end_date)}>
+                {statusText}
+              </Badge>
             </div>
           </div>
-
-          {/* Progress Bar */}
-          <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>Raised ${raffle.raised.toLocaleString()}</span>
-              <span>Goal ${raffle.goal.toLocaleString()}</span>
+          <h1 className="text-3xl font-bold text-custom-text mb-2">
+            {raffle.title}
+          </h1>
+          <p className="text-custom-text/70 mb-4">{raffle.description}</p>
+          <div className="flex items-center gap-6 text-sm text-custom-text/70">
+            <div className="flex items-center gap-1">
+              <Calendar className="h-4 w-4" />
+              Ends: {new Date(raffle.end_date).toLocaleDateString()}
             </div>
-            <Progress
-              value={(raffle.raised / raffle.goal) * 100}
-              className="h-3"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>{raffle.soldTickets} tickets sold</span>
-              <span>
-                {((raffle.raised / raffle.goal) * 100).toFixed(1)}% funded
-              </span>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              {daysLeft > 0 ? `${daysLeft} days left` : "Ended"}
+            </div>
+            <div className="flex items-center gap-1">
+              <Users className="h-4 w-4" />
+              {raffle.participants.length} participants
             </div>
           </div>
         </div>
 
-        {/* Statistics and Chart Combined */}
-        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Participants Analytics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Statistics on the left */}
-              <div className="lg:w-1/3">
-                <div className="grid grid-cols-2 gap-4">
-                  <Card className="border border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-gray-600">
-                            Total Participants
-                          </p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            {raffle.participants.length}
-                          </p>
-                        </div>
-                        <Users className="h-8 w-8 text-blue-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Link href={`/campaign/${raffle.id}`}>
+            <Button
+              variant="outline"
+              className="w-full border-custom-text/30 text-custom-text"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              View Campaign
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={handleShareRaffle}
+            className="w-full border-custom-text/30 text-custom-text"
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Share Campaign
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleDownloadQR}
+            className="w-full border-custom-text/30 text-custom-text"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Download QR Code
+          </Button>
+          <Link href={`/join/${raffle.id}`}>
+            <Button
+              variant="outline"
+              className="w-full border-custom-text/30 text-custom-text"
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Test Join Page
+            </Button>
+          </Link>
+        </div>
 
-                  <Card className="border border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-gray-600">Revenue</p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            ${raffle.raised.toLocaleString()}
-                          </p>
-                        </div>
-                        <DollarSign className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-gray-600">Tickets Sold</p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            {raffle.soldTickets}
-                          </p>
-                        </div>
-                        <Trophy className="h-8 w-8 text-purple-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-gray-600">
-                            Avg. Tickets/User
-                          </p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            {(
-                              raffle.soldTickets / raffle.participants.length
-                            ).toFixed(1)}
-                          </p>
-                        </div>
-                        <TrendingUp className="h-8 w-8 text-orange-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="shadow-custom border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-custom-text/70">
+                    Total Raised
+                  </p>
+                  <p className="text-2xl font-bold text-custom-text">
+                    ${raffle.raised_amount.toLocaleString()}
+                  </p>
                 </div>
+                <DollarSign className="h-8 w-8 text-green-600" />
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Chart on the right */}
-              <div className="lg:w-2/3">
-                <div className="h-80">
+          <Card className="shadow-custom border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-custom-text/70">
+                    Participants
+                  </p>
+                  <p className="text-2xl font-bold text-custom-text">
+                    {raffle.participants.length}
+                  </p>
+                </div>
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-custom border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-custom-text/70">
+                    Tickets Sold
+                  </p>
+                  <p className="text-2xl font-bold text-custom-text">
+                    {raffle.tickets_sold}
+                  </p>
+                </div>
+                <Ticket className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-custom border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-custom-text/70">
+                    Progress
+                  </p>
+                  <p className="text-2xl font-bold text-custom-text">
+                    {Math.round(progressPercentage)}%
+                  </p>
+                </div>
+                <Target className="h-8 w-8 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Progress and QR Code */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Prize Information Card */}
+            <Card className="shadow-custom border-0">
+              <CardHeader>
+                <CardTitle className="text-custom-text flex items-center gap-2">
+                  🎁 Prize Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {raffle.prize_type === "item" ? (
+                  <div className="flex items-start gap-3">
+                    <Gift className="w-6 h-6 text-blue-600 mt-1" />
+                    <div>
+                      <p className="font-semibold text-custom-text mb-1">
+                        Special Prize
+                      </p>
+                      <p className="text-sm text-custom-text/70 leading-relaxed">
+                        {raffle.prize_description ||
+                          "Winner receives a special item or service"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <DollarSign className="w-6 h-6 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-custom-text">
+                        Cash Prize
+                      </p>
+                      <p className="text-sm text-custom-text/70">
+                        Winner receives a portion of the funds raised
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Progress Card */}
+            <Card className="shadow-custom border-0">
+              <CardHeader>
+                <CardTitle className="text-custom-text">
+                  Campaign Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-custom-text/70">
+                      ${raffle.raised_amount.toLocaleString()} raised
+                    </span>
+                    <span className="text-sm font-semibold text-custom-text">
+                      {Math.round(progressPercentage)}%
+                    </span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-3" />
+                  <div className="flex justify-between text-sm text-custom-text/70 mt-2">
+                    <span>Goal: ${raffle.goal_amount.toLocaleString()}</span>
+                    <span>
+                      $
+                      {(
+                        raffle.goal_amount - raffle.raised_amount
+                      ).toLocaleString()}{" "}
+                      remaining
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-custom-text/70">
+                      Ticket Price:
+                    </span>
+                    <span className="text-sm font-medium text-custom-text">
+                      ${raffle.ticket_price}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-custom-text/70">
+                      Tickets Sold:
+                    </span>
+                    <span className="text-sm font-medium text-custom-text">
+                      {raffle.tickets_sold}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-custom-text/70">
+                      Total Participants:
+                    </span>
+                    <span className="text-sm font-medium text-custom-text">
+                      {raffle.participants.length}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* QR Code Card */}
+            <Card className="shadow-custom border-0">
+              <CardHeader>
+                <CardTitle className="text-custom-text flex items-center gap-2">
+                  <QrCode className="h-5 w-5" />
+                  QR Code
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="bg-white p-4 rounded-lg border border-gray-200 inline-block mb-4">
+                  <Image
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                      `${
+                        typeof window !== "undefined"
+                          ? window.location.origin
+                          : ""
+                      }/join/${raffle.id}`
+                    )}`}
+                    alt="Raffle QR Code"
+                    width={200}
+                    height={200}
+                    className="mx-auto"
+                  />
+                </div>
+                <p className="text-sm text-custom-text/70 mb-4">
+                  Participants can scan this QR code to join your raffle
+                </p>
+                <Button
+                  onClick={handleDownloadQR}
+                  className="w-full bg-custom-button hover:bg-custom-button/90 text-custom-text"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download QR Code
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts and Participants */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Participation Chart */}
+            <Card className="shadow-custom border-0">
+              <CardHeader>
+                <CardTitle className="text-custom-text">
+                  Participation Over Time
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={raffle.chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis
-                        dataKey="date"
-                        tick={{ fontSize: 12 }}
-                        axisLine={false}
-                      />
-                      <YAxis tick={{ fontSize: 12 }} axisLine={false} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "white",
-                          border: "1px solid #e5e7eb",
-                          borderRadius: "8px",
-                        }}
-                      />
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip />
                       <Area
-                        type="basis"
+                        type="monotone"
                         dataKey="cumulative"
-                        stroke="#059669"
-                        fill="url(#colorGradient)"
-                        strokeWidth={3}
-                        name="Total Participants"
+                        stroke="#22c55e"
+                        fill="#22c55e"
+                        fillOpacity={0.3}
                       />
-                      <defs>
-                        <linearGradient
-                          id="colorGradient"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="#059669"
-                            stopOpacity={0.3}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#059669"
-                            stopOpacity={0.05}
-                          />
-                        </linearGradient>
-                      </defs>
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Participants Grid */}
-        <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              All Participants ({raffle.participants.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {raffle.participants.map((participant: Participant) => (
-                <Card
-                  key={participant.id}
-                  className="border border-gray-200 hover:shadow-md transition-shadow"
-                >
-                  <CardContent className="py-0 px-6">
-                    <div className="flex items-center space-x-4 mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {participant.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 flex items-center">
-                          <Mail className="w-3 h-3 mr-1" />
-                          {participant.email}
-                        </p>
-                        <p className="text-sm text-gray-600 flex items-center mt-1">
-                          <Phone className="w-3 h-3 mr-1" />
-                          {participant.phone}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">
-                          Ticket Numbers
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {participant.tickets.map((ticket: number) => (
-                            <Badge
-                              key={ticket}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              #{ticket}
-                            </Badge>
-                          ))}
+            {/* Participants List */}
+            <Card className="shadow-custom border-0">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-custom-text">
+                    Participants ({raffle.participants.length})
+                  </CardTitle>
+                  {raffle.participants.length > 0 && (
+                    <Badge
+                      variant="outline"
+                      className="border-custom-text/30 text-custom-text"
+                    >
+                      Total: $
+                      {raffle.participants
+                        .reduce((sum, p) => sum + p.amount, 0)
+                        .toLocaleString()}
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {raffle.participants.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Users className="h-16 w-16 text-custom-text/30 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-custom-text mb-2">
+                      No participants yet
+                    </h3>
+                    <p className="text-custom-text/70">
+                      Share your raffle to start getting participants!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {raffle.participants.map((participant) => (
+                      <div
+                        key={participant.id}
+                        className="flex items-center justify-between p-4 bg-custom-bg/5 rounded-lg border border-custom-text/10"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-custom-button/20 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-semibold text-custom-button">
+                              {participant.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-custom-text">
+                              {participant.name}
+                            </h4>
+                            <div className="flex items-center gap-4 text-sm text-custom-text/70">
+                              <div className="flex items-center gap-1">
+                                <Mail className="h-3 w-3" />
+                                {participant.email}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {formatDate(participant.purchaseDate)}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold text-custom-text">
+                            ${participant.amount.toLocaleString()}
+                          </div>
+                          <div className="text-sm text-custom-text/70">
+                            {participant.tickets.length} ticket
+                            {participant.tickets.length !== 1 ? "s" : ""}
+                          </div>
+                          <div className="text-xs text-custom-text/50">
+                            #{participant.tickets.join(", #")}
+                          </div>
                         </div>
                       </div>
-
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-600">Amount Paid:</span>
-                        <span className="font-semibold text-green-600">
-                          ${participant.amount}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-600">Joined:</span>
-                        <span className="text-gray-900">
-                          {formatDate(participant.purchaseDate)}
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-600">Tickets:</span>
-                        <Badge className="bg-blue-100 text-blue-700">
-                          {participant.tickets.length} tickets
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-4 mt-8">
-          <Link href={`/campaign/${raffle.id}`}>
-            <Button variant="outline" size="lg">
-              <Eye className="w-4 h-4 mr-2" />
-              View Public Page
-            </Button>
-          </Link>
-
-          <Button variant="outline" size="lg">
-            <ExternalLink className="w-4 h-4 mr-2" />
-            Edit Raffle
-          </Button>
-
-          <Link href="/dashboard">
-            <Button variant="outline" size="lg">
-              ← Back to All Raffles
-            </Button>
-          </Link>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
